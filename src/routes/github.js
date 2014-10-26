@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var githelper = require('../utils/git.js');
 
 function handlePing(req) {
     console.log('Ping!');
@@ -7,13 +8,15 @@ function handlePing(req) {
 }
 
 function handlePush(req) {
-    if (req.ref != "refs/head/master") {
+    console.log(req.ref);
+    if (req.ref != "refs/heads/master") {
         console.log("This commit is not for master branch.");
         return;
     }
     console.log("Head Commit: " + req.head_commit.id);
     console.log("Commit Message: " + req.head_commit.message);
     console.log("\t Author: " + req.head_commit.author.name + "(" + req.head_commit.author.username + ")");
+    githelper.cloneRepo(req.repository.clone_url);
 }
 
 /* GET users listing. */
