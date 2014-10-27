@@ -6,6 +6,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "bluebird": "^2.3.6",
     "body-parser": "~1.8.1",
     "cookie-parser": "~1.3.3",
     "debug": "~2.0.0",
@@ -13,7 +14,11 @@
     "gift": "^0.4.3-1",
     "github-api": "^0.7.0",
     "jade": "~1.6.0",
+    "lodash": "^2.4.1",
     "morgan": "~1.3.0",
+    "nodegit": "^0.1.4",
+    "replace": "^0.3.0",
+    "rimraf": "^2.2.8",
     "serve-favicon": "~2.1.3",
     "transfer-github": "^0.2.0"
   }
