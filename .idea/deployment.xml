@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="Colab VM">
+  <component name="PublishConfigData" autoUpload="Always" serverName="Colab VM" promptOnLocalOverwrite="false">
     <serverData>
       <paths name="Colab VM">
         <serverdata>
           <mappings>
-            <mapping deploy="/tmp/github" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>
