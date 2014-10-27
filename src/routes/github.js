@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var githelper = require('../utils/git.js');
+var git = require('../utils/git.js');
+var doxygen = require('../utils/doxygen.js');
 
 function handlePing(req) {
     console.log('Ping!');
@@ -16,7 +17,12 @@ function handlePush(req) {
     console.log("Head Commit: " + req.head_commit.id);
     console.log("Commit Message: " + req.head_commit.message);
     console.log("\t Author: " + req.head_commit.author.name + "(" + req.head_commit.author.username + ")");
-    githelper.cloneRepo(req.repository.clone_url);
+    git.process(req.repository).then(function(repo) {
+       doxygen.process(repo).then(function() {
+           //create new repo
+           // copy docs into repo
+       });
+    });
 }
 
 /* GET users listing. */
