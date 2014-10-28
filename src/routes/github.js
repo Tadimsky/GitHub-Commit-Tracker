@@ -2,23 +2,35 @@ var express = require('express');
 var router = express.Router();
 var git = require('../utils/git.js');
 var doxygen = require('../utils/doxygen.js');
+var fs = require("fs-extra");
 
 function handlePing(req) {
-    console.log('Ping!');
-    console.log(req.zen);
+    winston.info('Ping!');
+    winston.info(req.zen);
 }
 
 function handlePush(req) {
-    console.log(req.ref);
     if (req.ref != "refs/heads/master") {
-        console.log("This commit is not for master branch.");
+        winston.warn("This commit is not for master branch.");
         return;
     }
-    console.log("Head Commit: " + req.head_commit.id);
-    console.log("Commit Message: " + req.head_commit.message);
-    console.log("\t Author: " + req.head_commit.author.name + "(" + req.head_commit.author.username + ")");
+    winston.info("Head Commit: " + req.head_commit.id);
+    winston.info("\tCommit Message: " + req.head_commit.message);
+    winston.info("\tAuthor: " + req.head_commit.author.name + "(" + req.head_commit.author.username + ")");
     git.process(req.repository).then(function(repo) {
        doxygen.process(repo).then(function() {
+           git.setupGitHubPages(repo);
+           fs.copy(repo.directory.docs, repo.directory.repo, function(err){
+               if (err) return winston.error(err);
+               winston.info("Copied docs to repo.");
+               git.add(repo.directory.repo).then(function() {
+                   git.commit(repo.directory.repo, "Added Doxygen documentation").then(function() {
+                       git.push(repo.directory.repo, "gh-pages").then(function() {
+                          winston.info("Pushed Doxygen docs.");
+                       });
+                   });
+               });
+           });
            //create new repo
            // copy docs into repo
        });
@@ -40,7 +52,7 @@ router.post('/webhook', function(req, res) {
             handlePush(req.body);
             break;
         default:
-            console.log(req.body);
+            winston.warn("Unknown Event", req.body);
             break;
     }
     res.send('Thanks for the update! <3');
