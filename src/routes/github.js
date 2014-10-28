@@ -61,4 +61,8 @@ router.post('/webhook', function(req, res) {
     res.send('Thanks for the update! <3');
 });
 
+router.get('/auth', function(req, res) {
+
+});
+
 module.exports = router;
