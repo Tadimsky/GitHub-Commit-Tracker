@@ -14,6 +14,8 @@ function handlePush(req) {
         winston.warn("This commit is not for master branch.");
         return;
     }
+
+    winston.profile('Git Push Event');
     winston.info("Head Commit: " + req.head_commit.id);
     winston.info("\tCommit Message: " + req.head_commit.message);
     winston.info("\tAuthor: " + req.head_commit.author.name + "(" + req.head_commit.author.username + ")");
@@ -27,6 +29,7 @@ function handlePush(req) {
                    git.commit(repo.directory.repo, "Added Doxygen documentation").then(function() {
                        git.push(repo.directory.repo, "gh-pages").then(function() {
                           winston.info("Pushed Doxygen docs.");
+                           winston.profile('Git Push Event');
                        });
                    });
                });

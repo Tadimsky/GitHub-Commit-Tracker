@@ -141,10 +141,7 @@ function createGitHubPages(repo) {
                 add(dst).then(function () {
                     commit(dst, "Added Readme").then(function () {
                         winston.info('Committed Readme file.');
-                        push(dst).then(function () {
-                            winston.info('Pushed ' + branch + ' to origin');
-                            resolve();
-                        });
+                        resolve();
                     });
                 });
             });

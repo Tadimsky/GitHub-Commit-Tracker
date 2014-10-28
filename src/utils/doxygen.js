@@ -28,21 +28,13 @@ var fileVariables = {
 
 function setupDoxyfile(dst) {
     return new Promise(function(res, rej) {
-        fs.readFile(sourceDoxyfile, function (err, data) {
-            if (err) rej(err)
-            fs.mkdir(dst, function(err, done) {
-                if (err && err.code != 'EEXIST') rej(err);
-                var newFile = dst + "/Doxyfile";
-                fs.writeFile(newFile, data, function (err) {
-                    if (err) rej(err);
-                    winston.info('Copied Doxyfile into ' + newFile);
-                    return res(newFile);
-                });
-            });
-
+        var newFile = dst + "/Doxyfile";
+        fs.copy(sourceDoxyfile, newFile, function(err){
+            if (err) return rej(err);
+            winston.info('Copied Doxyfile into ' + newFile);
+            return res(newFile);
         });
     });
-
 }
 
 function replaceVariables(file, search, value) {
