@@ -3,5 +3,20 @@ html
   head
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
-  body
-    block content
+    link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css")
+    //link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css")
+    link(rel="stylesheet", href="http://bootswatch.com/flatly/bootstrap.min.css")
+    script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js")
+
+    body
+      .container
+        .header
+          ul.nav.nav-pills.pull-right
+            li.active
+              a(href="#") Home
+            li
+              a(href="#") Repositories
+            li
+              a(href="#") Settings
+          h3.text-muted= title
+        block content
