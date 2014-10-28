@@ -1,4 +1,4 @@
-var fs = require("fs");
+var fs = require("fs-extra");
 var replace = require("replace");
 var Promise = require("bluebird");
 
@@ -6,10 +6,10 @@ var sourceDoxyfile = global.scriptsFolder + "Doxyfile";
 
 fs.exists(sourceDoxyfile, function(exists) {
     if (!exists) {
-        console.log("Doxyfile does not exist at " + sourceDoxyfile);
+        winston.error("Doxyfile does not exist at " + sourceDoxyfile);
     }
     else {
-        console.log("Found Doxyfile.");
+        winston.info("Found Doxyfile.");
     }
 });
 
@@ -33,10 +33,9 @@ function setupDoxyfile(dst) {
             fs.mkdir(dst, function(err, done) {
                 if (err && err.code != 'EEXIST') rej(err);
                 var newFile = dst + "/Doxyfile";
-                console.log("Copying Doxyfile into " + newFile);
                 fs.writeFile(newFile, data, function (err) {
                     if (err) rej(err);
-                    console.log('Copied.');
+                    winston.info('Copied Doxyfile into ' + newFile);
                     return res(newFile);
                 });
             });
@@ -121,7 +120,7 @@ function processRepository(repo) {
         };
         configureDoxy(projectDetails, repo.directory.docs).then(function(newDoxy) {
             runDoxygen(newDoxy).then(function() {
-                console.log("Completed Docs");
+                winston.info("Completed Docs");
                 res();
             });
         }).catch(function(err) {
