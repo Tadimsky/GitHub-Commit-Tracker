@@ -33,7 +33,7 @@ function cloneRepository(rep) {
             }
             else {
                 winston.info("Repository does not exist, cloning.");
-                nodegit.Clone.clone(rep.clone_url, rep.directory.repo, null).then(function(repo) {
+                executeGit(rep.directory.repo, "clone " + rep.clone_url, true).then(function() {
                     winston.info("\tRepository opened.");
                     return res(rep);
                 }).catch(function(err) {
@@ -57,18 +57,23 @@ function pullRepository(rep) {
     });
 }
 
-function executeGit(dir, command) {
+function executeGit(dir, command, lol) {
     return new Promise(function(res, rej) {
-        var exec = require("child_process").exec;
-        var git = exec("git --git-dir=" + dir + "/.git --work-tree=" + dir + " " + command,
-            {
-                cwd : dir,
-                maxBuffer: 500 * 1024
-            },
-            function(error, stdout, stderr) {
-                if (error) rej(error);
-                res(stdout);
-            });
+        fs.ensureDir(dir, function(err) {
+            var exec = require("child_process").exec;
+            var gitCommand = 'git';
+            gitCommand += lol ? ' ' : " --git-dir=" + dir + "/.git --work-tree=" + dir + " ";
+            command += lol ? ' ' + dir : '';
+            var git = exec(gitCommand + command,
+                {
+                    cwd : dir,
+                    maxBuffer: 500 * 1024
+                },
+                function(error, stdout, stderr) {
+                    if (error) rej(error);
+                    res(stdout);
+                });
+        });
     });
 }
 
