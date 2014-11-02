@@ -79,14 +79,19 @@ function runDoxygen(doxyFile) {
         var exec = require('child_process').exec;
 
         var doxygen = exec('doxygen ' + doxyFile,
+            {
+                maxBuffer: 50 * 1024 * 1024
+            },
             function (error, stdout, stderr) {
                 if (doxygen.errorCode != 0) {
-                    throw  new Error(stderr);
-                    return rej(stderr);
+                    winston.error(stderr);
                 }
-                if (error !== null) {
-                    rej(error);
+                else {
+                    if (error !== null) {
+                        winston.error(stderr);
+                    }
                 }
+
                 res();
             });
         doxygen.errorCode = 0;
