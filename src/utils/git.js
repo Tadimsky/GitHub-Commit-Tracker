@@ -67,7 +67,7 @@ function executeGit(dir, command, lol) {
             var git = exec(gitCommand + command,
                 {
                     cwd : dir,
-                    maxBuffer: 500 * 1024
+                    maxBuffer: 50 * 1024 * 1024
                 },
                 function(error, stdout, stderr) {
                     if (error) rej(error);
