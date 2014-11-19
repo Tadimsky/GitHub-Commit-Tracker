@@ -5,32 +5,26 @@ var _ = require('lodash');
 var Promise = require("bluebird");
 
 /**
- * Returns the information required for a repo to be made.
- * Takes in the repo object from GitHub Event
- * */
-
-var defaultBranch = "gh-pages";
-function repoInfo(repo) {
-    var dirname = "/tmp/" + repo.owner.name + '/' + repo.name;
-
-    return _.extend(repo, {
-        directory: {
-            root: dirname,
-            repo : dirname + '/repository',
-            docs: dirname + '/docs'
-        }
-    });
-}
-
-
-/**
  * Git Library
  * @param repo: The repo information from GitHub events
  * @constructor
  */
 function Git(repo) {
+    var generateRepoInfo = function(repo) {
+        var dirname = "/tmp/" + repo.owner.name + '/' + repo.name;
+        return _.extend(repo, {
+            directory: {
+                root: dirname,
+                repo : dirname + '/repository',
+                docs: dirname + '/docs'
+            }
+        });
+    };
+
     var self = this;
-    var repository = repoInfo(repo);
+    var repository = generateRepoInfo(repo);
+
+
 
     var executeGit = function (command, lol) {
         var dir = repository.directory.repo;
@@ -53,6 +47,31 @@ function Git(repo) {
         });
     };
 
+    var currentBranch = function() {
+        return new Promise(function(resolve, reject) {
+            executeGit('branch').then(function(branches) {
+               resolve(branches);
+            });
+        });
+    };
+
+    var checkout = function(branch) {
+      return new Promise(function(resolve, reject) {
+          winston.info('Checking out branch ' + branch);
+          executeGit('checkout ' + branch).then(function() {
+              winston.info('Checked out branch.');
+              currentBranch().then(function(branches) {
+                 if (branches.indexOf('* master') > -1){
+                     resolve();
+                 }
+                 else {
+                     reject(branches);
+                 }
+              });
+          });
+      });
+    };
+
     var checkoutOrphanBranch = function (branch) {
         return new Promise(function (res, rej) {
             // checkout new orphan branch
@@ -69,63 +88,72 @@ function Git(repo) {
         });
     };
 
-    return {
-        clone: function () {
-            return new Promise(function (res, rej) {
-                fs.exists(repository.directory.repo, function (exists) {
-                    if (exists) {
-                        winston.info("Repository exists, deleting and recloning.");
-                        rimraf(repository.directory.repo, function (err) {
-                            if (err) rej(err);
-                            self.clone().then(function () {
-                                res(repository);
-                            })
-                        });
-                    }
-                    else {
-                        winston.info("Repository does not exist, cloning.");
-                        executeGit("clone " + rep.clone_url, true).then(function () {
-                            winston.info("\tRepository cloned.");
-                            return res(rep);
-                        }).catch(function (err) {
-                            rej(err);
-                        })
-                    }
-                });
-            });
-        },
-        add: function () {
-            return new Promise(function (resolve, reject) {
-                executeGit("add .").then(function () {
-                    resolve();
-                }).catch(function (err) {
-                    reject(err);
-                });
-            });
-        },
-        commit: function (message) {
-            return new Promise(function (resolve, reject) {
-                executeGit("commit -m '" + message + "'").then(function () {
-                    resolve();
-                }).catch(function (err) {
-                    reject(err);
-                });
-            });
-        },
-        push: function (branch, force) {
-            var command = 'push -u ';
-            if (!branch) {
-                branch = 'master';
-            }
-            if (force) {
-                command += '-f ';
-            }
-            command += 'origin ' + branch;
-
-            executeGit(command).then(function () {
+    var add = function () {
+        return new Promise(function (resolve, reject) {
+            executeGit("add .").then(function () {
                 resolve();
             }).catch(function (err) {
                 reject(err);
+            });
+        });
+    };
+
+    var commit = function (message) {
+        return new Promise(function (resolve, reject) {
+            executeGit("commit -m '" + message + "'").then(function () {
+                resolve();
+            }).catch(function (err) {
+                reject(err);
+            });
+        });
+    };
+
+    var clone = function () {
+        return new Promise(function (res, rej) {
+            fs.exists(repository.directory.repo, function (exists) {
+                if (exists) {
+                    winston.info("Repository exists, deleting and recloning.");
+                    rimraf(repository.directory.repo, function (err) {
+                        if (err) rej(err);
+                        clone().then(function () {
+                            res(repository);
+                        })
+                    });
+                }
+                else {
+                    winston.info("Repository does not exist, cloning.");
+                    executeGit("clone " + repository.clone_url, true).then(function () {
+                        winston.info("\tRepository cloned.");
+                        return res(repository);
+                    }).catch(function (err) {
+                        rej(err);
+                    })
+                }
+            });
+        });
+    };
+
+    return {
+        clone: clone,
+        add: add,
+        commit: commit,
+        checkout: checkout,
+        push: function (branch, force) {
+            return new Promise(function(resolve, reject) {
+                var command = 'push -u ';
+                if (!branch) {
+                    branch = 'master';
+                }
+                if (force) {
+                    command += '-f ';
+                }
+                command += 'origin ' + branch;
+
+                executeGit(command).then(function () {
+                    resolve();
+                }).catch(function (err) {
+                    reject(err);
+                });
             });
         },
         pull: function (branch) {
@@ -138,8 +166,8 @@ function Git(repo) {
                 checkoutOrphanBranch(branch).then(function () {
                     fs.writeFile(dst + "/Readme.md", "Documentation", function (err) {
                         if (err) reject(err);
-                        self.add().then(function () {
-                            self.commit("Added Readme").then(function () {
+                        add().then(function () {
+                            commit("Added Readme").then(function () {
                                 winston.info('Committed Readme file.');
                                 resolve();
                             });
@@ -151,4 +179,4 @@ function Git(repo) {
     }
 }
 
-module.exports = Git;
+module.exports.Git = Git;
