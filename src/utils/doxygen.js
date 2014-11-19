@@ -127,5 +127,29 @@ function processRepository(repo) {
 }
 
 module.exports = {
-    process: processRepository
+    process: function(git, repo) {
+        return new Promise(function(resolve, reject) {
+            processRepository(repo).then(function() {
+                git.createGitHubPages().then(function() {
+                    fs.copy(repo.directory.docs, repo.directory.repo, function(err){
+                        if (err) return winston.error(err);
+                        winston.info("Copied docs to repo.");
+                        git.add().then(function() {
+                            git.commit("Added Doxygen documentation").then(function() {
+                                git.push("gh-pages", true).then(function() {
+                                    winston.info("Pushed Doxygen docs.");
+
+                                    git.checkout('master').then(function() {
+                                       resolve();
+                                    }).catch(function(err) {
+                                        reject(err);
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        });
+    }
 };
