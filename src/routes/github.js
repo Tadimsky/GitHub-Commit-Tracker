@@ -34,15 +34,13 @@ function handlePush(req) {
                    });
                });
            });
-           //create new repo
-           // copy docs into repo
        });
     });
 }
 
 /* GET users listing. */
 router.get('/', function(req, res) {
-    res.send('respond with a resource');
+    res.send('This is a GitHub Hook, what are you doing GETting it? :)');
 });
 
 router.post('/webhook', function(req, res) {
