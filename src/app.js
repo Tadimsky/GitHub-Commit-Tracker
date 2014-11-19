@@ -28,7 +28,24 @@ app.use(logger('dev'));
 app.use(bodyParser.json({limit: '5mb'}));
 app.use(bodyParser.urlencoded({ extended: false, limit:'5mb' }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+
+if (process.env.environment == "development") {
+    app.use(morgan('dev',{
+        skip: function (req, res) {
+            if (res.statusCode == 200) {
+                return req.baseUrl == "/admin";
+            }
+        }
+    }));
+
+    app.use('/admin', express.static(path.join(__dirname, '/client/')));
+    app.use('/admin', express.static(path.join(__dirname, '/client/.tmp')));
+    app.use('/admin', express.static(path.join(__dirname, '/client/app')));
+
+}
+if('production' == app.get('env')) {
+    app.use('/admin', express.static(path.join(__dirname, '/dist')));
+}
 
 app.use('/', routes);
 app.use('/github', github);
