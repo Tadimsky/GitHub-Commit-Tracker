@@ -1,6 +1,10 @@
 #!/usr/bin/env node
+process.env.environment = process.env.NODE_ENV || 'development';
+
 var debug = require('debug')('test');
 var app = require('../app');
+
+
 
 app.set('port', process.env.PORT || 3000);
 

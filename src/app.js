@@ -18,9 +18,15 @@ var github = require('./routes/github');
 
 var app = express();
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+if (process.env.environment == "development") {
+    app.use('/admin', express.static(path.join(__dirname, '/client/')));
+    app.use('/admin', express.static(path.join(__dirname, '/client/.tmp')));
+    app.use('/admin', express.static(path.join(__dirname, '/client/app')));
+
+}
+if (process.env.environment == 'production') {
+    app.use('/admin', express.static(path.join(__dirname, '/dist')));
+}
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
@@ -29,25 +35,9 @@ app.use(bodyParser.json({limit: '5mb'}));
 app.use(bodyParser.urlencoded({ extended: false, limit:'5mb' }));
 app.use(cookieParser());
 
-if (process.env.environment == "development") {
-    app.use(morgan('dev',{
-        skip: function (req, res) {
-            if (res.statusCode == 200) {
-                return req.baseUrl == "/admin";
-            }
-        }
-    }));
 
-    app.use('/admin', express.static(path.join(__dirname, '/client/')));
-    app.use('/admin', express.static(path.join(__dirname, '/client/.tmp')));
-    app.use('/admin', express.static(path.join(__dirname, '/client/app')));
 
-}
-if('production' == app.get('env')) {
-    app.use('/admin', express.static(path.join(__dirname, '/dist')));
-}
 
-app.use('/', routes);
 app.use('/github', github);
 
 
