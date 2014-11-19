@@ -22,7 +22,7 @@ function handlePush(req) {
     winston.info("\tAuthor: " + req.head_commit.author.name + "(" + req.head_commit.author.username + ")");
 
     if (req.head_commit.author.username != 'Tadimsky') {
-        return;
+        //return;
     }
 
     var git = Git.Git(req.repository);
