@@ -1,4 +1,5 @@
 global.scriptsFolder = __dirname + "/../scripts/";
+global.pagesFolder = __dirname + "/../gh-pages/";
 global.winston = require('winston');
 winston.remove(winston.transports.Console);
 winston.add(winston.transports.Console, {
