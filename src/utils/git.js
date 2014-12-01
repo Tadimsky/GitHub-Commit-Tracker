@@ -11,7 +11,7 @@ var Promise = require("bluebird");
  */
 function Git(repo) {
     var generateRepoInfo = function(repo) {
-        var dirname = "/tmp/" + repo.owner.name + '/' + repo.name;
+        var dirname = "/tmp/git/" + repo.owner.name + '/' + repo.name;
         return _.extend(repo, {
             directory: {
                 root: dirname,
