@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var Git = require('../utils/git.js');
 var doxygen = require('../utils/doxygen.js');
+var ghPages = require('../utils/gh-pages.js');
 var fs = require("fs-extra");
 var async = require('async');
 
@@ -30,8 +31,10 @@ function handlePush(req) {
     git.clone().then(function(repo) {
         async.series([
             function(callback) {
-                doxygen.process(git, repo).then(function() {
-                    callback(null, 'doxygen');
+                ghPages.process(repo).then(function() {
+                    doxygen.process(git, repo).then(function() {
+                        callback(null, 'doxygen');
+                    });
                 });
             }
         ], function(err, result) {
