@@ -3,6 +3,7 @@ var router = express.Router();
 var Git = require('../utils/git.js');
 var doxygen = require('../utils/doxygen.js');
 var ghPages = require('../utils/gh-pages.js');
+var sendmail= require('../utils/email.js');
 var fs = require("fs-extra");
 var async = require('async');
 
@@ -10,6 +11,32 @@ function handlePing(req) {
     winston.info('Ping!');
     winston.info(req.zen);
 }
+
+function handleWiki(content) {
+    if (!content.pages) {
+        return;
+    }
+    winston.info("Wiki Updated: " + content.repository.full_name);
+    var email = {
+        to: 'jas138@duke.edu',
+        subject: 'Wiki Pages Updated: ' + content.repository.full_name,
+        html: '<h3>Wiki Pages Updated</h3>'
+    };
+    email.html += '<p>The ' + content.repository.name + ' team has updated their wiki.</p>';
+    email.html += '<p>The following pages have been changed or created:';
+    email.html += '<ul>';
+
+    content.pages.forEach(function(page){
+        email.html += '<li>';
+        email.html += '<a href="' + page.html_url + '">' + page.title +'</a>: ' + page.action;
+        email.html += '</li>';
+    });
+
+    email.html += '</ul>';
+    email.html += '</p>';
+    winston.info('Sending mail.');
+    sendmail.sendMail(email);
+};
 
 function handlePush(req) {
     if (req.ref != "refs/heads/master") {
@@ -58,6 +85,9 @@ router.post('/webhook', function(req, res) {
             break;
         case 'push':
             handlePush(req.body);
+            break;
+        case 'gollum':
+            handleWiki(req.body);
             break;
         default:
             winston.warn("Unknown Event", req.body);
