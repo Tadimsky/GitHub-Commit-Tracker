@@ -1,5 +1,5 @@
 var fs = require("fs-extra");
-var replace = require("replace");
+var replace = require("./fileformatter");
 var Promise = require("bluebird");
 
 var fileVariables = {
@@ -13,30 +13,8 @@ var fileVariables = {
     }
 };
 
-function replaceVariables(file, search, value) {
-    replace({
-        regex: search,
-        replacement: value,
-        paths: [file],
-        silent: true
-    });
-}
-
-function recursiveConfigCopy(file, source, target) {
-    for (var property in source) {
-        if (source.hasOwnProperty(property) && target.hasOwnProperty(property)) {
-            if (typeof source[property] == "object") {
-                recursiveConfigCopy(file, source[property], target[property]);
-            }
-            else {
-                replaceVariables(file, source[property], target[property]);
-            }
-        }
-    }
-}
-
 function setPageContent(file, values) {
-    recursiveConfigCopy(file + '/index.html', fileVariables, values);
+    replace.replace(file + '/index.html', fileVariables, values);
 }
 
 function generatePages(dst) {
