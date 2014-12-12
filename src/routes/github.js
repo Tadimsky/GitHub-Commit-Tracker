@@ -18,7 +18,7 @@ function handleWiki(content) {
     }
     winston.info("Wiki Updated: " + content.repository.full_name);
     var email = {
-        to: 'jas138@duke.edu',
+        to: 'rcd@cs.duke.edu',
         subject: 'Wiki Pages Updated: ' + content.repository.full_name,
         html: '<h3>Wiki Pages Updated</h3>'
     };
@@ -90,7 +90,7 @@ router.post('/webhook', function(req, res) {
             handleWiki(req.body);
             break;
         default:
-            winston.warn("Unknown Event", req.body);
+            winston.warn("Unknown Event: ", event_type);
             break;
     }
     res.send('Thanks for the update! <3');
