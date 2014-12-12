@@ -1,5 +1,5 @@
 var fs = require("fs-extra");
-var replace = require("replace");
+var replace = require("./fileformatter");
 var Promise = require("bluebird");
 
 var sourceDoxyfile = global.scriptsFolder + "Doxyfile";
@@ -37,30 +37,8 @@ function setupDoxyfile(dst) {
     });
 }
 
-function replaceVariables(file, search, value) {
-    replace({
-        regex: search,
-        replacement: value,
-        paths: [file],
-        silent: true
-    });
-}
-
-function recursiveConfigCopy(file, source, target) {
-    for (var property in source) {
-        if (source.hasOwnProperty(property) && target.hasOwnProperty(property)) {
-            if (typeof source[property] == "object") {
-                recursiveConfigCopy(file, source[property], target[property]);
-            }
-            else {
-                replaceVariables(file, source[property], target[property]);
-            }
-        }
-    }
-}
-
 function setConfig(file, values) {
-    recursiveConfigCopy(file, fileVariables, values);
+    replace.replace(file, fileVariables, values);
 }
 
 function configureDoxy(doxyInfo, dst) {
@@ -109,12 +87,14 @@ function processRepository(repo) {
                 version: ""
             },
             output: {
-                location: repo.directory.docs
+                location: repo.directory.docs + '/Doxygen'
             },
             input: {
                 location: repo.directory.repo
             }
         };
+        console.log("HEYY");
+        console.log(projectDetails.output.location);
         configureDoxy(projectDetails, repo.directory.docs).then(function(newDoxy) {
             runDoxygen(newDoxy).then(function() {
                 winston.info("Completed Docs");
