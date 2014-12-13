@@ -1,4 +1,5 @@
 var nodegit = require("nodegit");
+var async = require('async');
 var fs = require("fs-extra");
 var rimraf = require("rimraf");
 var _ = require('lodash');
@@ -47,7 +48,7 @@ function Git(repo) {
         });
     };
 
-    var currentBranch = function() {
+    var getBranches = function() {
         return new Promise(function(resolve, reject) {
             executeGit('branch').then(function(branches) {
                resolve(branches);
@@ -60,8 +61,8 @@ function Git(repo) {
           winston.info('Checking out branch ' + branch);
           executeGit('checkout ' + branch).then(function() {
               winston.info('Checked out branch.');
-              currentBranch().then(function(branches) {
-                 if (branches.indexOf('* master') > -1){
+              getBranches().then(function(branches) {
+                 if (branches.indexOf('* ' + branch) > -1){
                      resolve();
                  }
                  else {
@@ -74,16 +75,50 @@ function Git(repo) {
 
     var checkoutOrphanBranch = function (branch) {
         return new Promise(function (res, rej) {
-            // checkout new orphan branch
-            winston.info('Creating new ' + branch + ' branch');
-            executeGit("checkout --orphan " + branch).then(function () {
-                // remove all files in current branch
-                winston.info('Created branch');
+
+            async.series([
+                function(callback) {
+                    getBranches().then(function(branches) {
+                        if (branches.indexOf('gh-pages') > -1){
+                            checkout('gh-pages').then(function() {
+                                callback();
+                            });
+                        }
+                        else {
+                            // checkout new orphan branch
+                            winston.info('Creating new ' + branch + ' branch');
+                            executeGit("checkout --orphan " + branch).then(function () {
+                                winston.info('Created branch');
+                                callback();
+                            });
+                        }
+                    });
+                }
+            ],function(err, r) {
                 winston.info('Removing all files from branch');
                 executeGit("rm -f -r .").then(function () {
                     winston.info('Cleaned folder.');
                     res();
                 });
+            });
+        });
+    };
+
+    var pull = function(branch, force) {
+        return new Promise(function(resolve, reject) {
+            var command = 'pull ';
+            if (!branch) {
+                branch = 'master';
+            }
+            if (force) {
+                command += '-f ';
+            }
+            command += 'origin ' + branch;
+
+            executeGit(command).then(function () {
+                resolve();
+            }).catch(function (err) {
+                reject(err);
             });
         });
     };
@@ -112,12 +147,16 @@ function Git(repo) {
         return new Promise(function (res, rej) {
             fs.exists(repository.directory.repo, function (exists) {
                 if (exists) {
-                    winston.info("Repository exists, deleting and recloning.");
-                    rimraf(repository.directory.repo, function (err) {
-                        if (err) rej(err);
-                        clone().then(function () {
+                    winston.info("Repository exists.");
+                    checkout('master').then(function() {
+                        winston.info('Checking out master.');
+                        pull('master', true).then(function() {
                             res(repository);
-                        })
+                        }).catch(function(err) {
+                            rej(err);
+                        });
+                    }).catch(function(err) {
+                        rej(err);
                     });
                 }
                 else {
@@ -156,9 +195,7 @@ function Git(repo) {
                 });
             });
         },
-        pull: function (branch) {
-
-        },
+        pull: pull,
         createGitHubPages: function() {
             return new Promise(function (resolve, reject) {
                 var dst = repository.directory.repo;
