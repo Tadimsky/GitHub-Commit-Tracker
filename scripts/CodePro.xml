@@ -15,7 +15,7 @@
 		</codepro.audit>
 
 		<codepro.metrics >
-			<fileSet dir="${repoDir}"/>
+			<fileSet dir="${repoDir}/repository/"/>
 			<classpath>
 				<pathelement location="${jreDir}/lib/rt.jar"/>
 			</classpath>
