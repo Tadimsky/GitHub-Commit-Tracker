@@ -20,7 +20,7 @@ function setPageContent(file, values) {
 function generatePages(dst) {
     return new Promise(function(resolve, reject) {
             fs.copy(global.pagesFolder, dst, function(err){
-                if (err) return rej(err);
+                if (err) return reject(err);
                 winston.info('Copied GH-Pages site into ' + dst);
                 return resolve(dst);
             });
@@ -60,11 +60,34 @@ function processRepository(repo) {
 }
 
 module.exports = {
-    process: function(repo) {
+    /**
+     * Creates the index page and default files in the docs folder.
+     * @param repo
+     * @returns {Promise}
+     */
+    initialize: function(repo) {
         return new Promise(function(resolve, reject) {
             processRepository(repo).then(function() {
                 winston.info('Setup GH-Pages.');
                 resolve();
+            });
+        });
+    },
+    uploadDocs : function(repo, git) {
+        return new Promise(function(resolve, reject) {
+            git.createGitHubPages().then(function() {
+                fs.copy(repo.directory.docs, repo.directory.repo, function(err){
+                    if (err) return winston.error(err);
+                    winston.info("Copied docs to repo.");
+                    git.add().then(function() {
+                        git.commit("Added Files to gh-pages").then(function() {
+                            git.push("gh-pages", true).then(function() {
+                                winston.info("Pushed docs.");
+                                resolve();
+                            });
+                        });
+                    });
+                });
             });
         });
     }
