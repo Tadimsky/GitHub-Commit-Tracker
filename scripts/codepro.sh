@@ -1,3 +1,4 @@
+#!/bin/sh
 # ***** Local Environment Variables ***********
 
 # the eclipse home
