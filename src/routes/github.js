@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var Git = require('../utils/git.js');
 var doxygen = require('../utils/doxygen.js');
+var codepro = require('../utils/codepro.js');
 var ghPages = require('../utils/gh-pages.js');
 var sendmail= require('../utils/email.js');
 var fs = require("fs-extra");
@@ -58,15 +59,47 @@ function handlePush(req) {
     git.clone().then(function(repo) {
         async.series([
             function(callback) {
-                ghPages.process(repo).then(function() {
-                    doxygen.process(git, repo).then(function() {
-                        callback(null, 'doxygen');
-                    });
+                async.parallel([
+                    // process repository
+                    function(cbk) {
+                        ghPages.initialize(repo).then(function(){
+                            cbk(null, 'Index File Created.');
+                        });
+                    },
+                    function(cbk) {
+                        doxygen.generateDocs(repo).then(function(){
+                            cbk(null, 'Doxygen Generated.');
+                        });
+                    },
+                    function(cbk) {
+                        codepro.run(repo).then(function(){
+                            cbk(null, 'CodePro analyzed.');
+                        });
+                    }
+                ], function(err, results) {
+                    // once all the doc events are processed, send the files up
+                    if (!err) {
+                        ghPages.uploadDocs(repo, git).then(function() {
+                            // then checkout master agin for the future
+                            git.checkout('master').then(function() {
+                                callback(null, results);
+                            }).catch(function(err) {
+                                callback(err);
+                            });
+                        })
+                    }
                 });
             }
-        ], function(err, result) {
-            winston.info('Completed:')
-            winston.info('\t' + result);
+        ], function(err, results) {
+            if (err) {
+                winston.error(err);
+            }
+            winston.info('Completed:');
+            if (results) {
+                results.forEach(function(event) {
+                    winston.info('\t' + event);
+                });
+            }
             winston.profile('Git Push Event');
         });
     });
