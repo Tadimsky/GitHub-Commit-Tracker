@@ -38,7 +38,7 @@
                         com.instantiations.assist.eclipse.audit.largeNumberOfFields.enabled=true
                         com.instantiations.assist.eclipse.audit.methodNamingConvention.namingConvention=;2;7;
                         com.instantiations.assist.eclipse.audit.instanceFieldVisibility.allowsPackageVisibility=false
-                        com.instantiations.assist.eclipse.audit.spaceAroundOperators.enabled=true
+                        com.instantiations.assist.eclipse.audit.spaceAroundOperators.enabled=false
                         com.instantiations.assist.eclipse.audit.methodNamingConvention.enabled=true
                         com.instantiations.assist.eclipse.audit.emptySynchronizedStatement.enabled=true
                         com.instantiations.assist.eclipse.audit.packagePrefixNamingConvention.enabled=true
@@ -73,7 +73,7 @@
                         com.instantiations.assist.eclipse.audit.unnecessaryDefaultConstructor.enabled=true
                         com.instantiations.assist.eclipse.audit.instanceFieldVisibility.allowsPublicVisibility=false
                         com.instantiations.assist.eclipse.audit.redundantAssignment.enabled=true
-                        com.instantiations.assist.eclipse.audit.whiteSpaceUsage.allowTabsAtStart=false
+                        com.instantiations.assist.eclipse.audit.whiteSpaceUsage.allowTabsAtStart=true
                         com.instantiations.assist.eclipse.audit.avoidNestedBlocks.maxBlockDepth=3
                         com.instantiations.assist.eclipse.audit.instanceFieldNamingConvention.namingConvention=;2;7;
                         com.instantiations.assist.eclipse.audit.instanceFieldVisibility.allowsProtectedVisibility=false
