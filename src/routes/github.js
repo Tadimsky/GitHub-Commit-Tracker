@@ -37,7 +37,7 @@ function handleWiki(content) {
     email.html += '</p>';
     winston.info('Sending mail.');
     sendmail.sendMail(email);
-};
+}
 
 function handlePush(req) {
     if (req.ref != "refs/heads/master") {
@@ -62,16 +62,19 @@ function handlePush(req) {
                 async.parallel([
                     // process repository
                     function(cbk) {
+                        winston.info('Creating Index File.');
                         ghPages.initialize(repo).then(function(){
                             cbk(null, 'Index File Created.');
                         });
                     },
                     function(cbk) {
+                        winston.info('Generating Doxygen Docs.');
                         doxygen.generateDocs(repo).then(function(){
                             cbk(null, 'Doxygen Generated.');
                         });
                     },
                     function(cbk) {
+                        winston.info('Running CodePro.');
                         codepro.run(repo).then(function(){
                             cbk(null, 'CodePro analyzed.');
                         });

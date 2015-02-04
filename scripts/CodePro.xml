@@ -6,7 +6,9 @@
         <property name="repoDir" location="%PROJECT_DIR%"/>
 
 		<codepro.audit auditRuleSetFile="AuditPreferences.pref">
-            <fileSet dir="${repoDir}/repository/"/>
+            <fileSet dir="${repoDir}/repository/">
+				<exclude name="**/*Test*.jar"/>
+            </fileSet>
 			<classpath>
 				<pathelement location="${jreDir}/lib/rt.jar"/>
 			</classpath>
@@ -15,7 +17,9 @@
 		</codepro.audit>
 
 		<codepro.metrics >
-			<fileSet dir="${repoDir}/repository/"/>
+			<fileSet dir="${repoDir}/repository/">
+				<exclude name="**/*Test*.jar"/>
+			</fileSet>
 			<classpath>
 				<pathelement location="${jreDir}/lib/rt.jar"/>
 			</classpath>
