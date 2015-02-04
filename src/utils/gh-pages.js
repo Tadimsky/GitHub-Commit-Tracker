@@ -76,7 +76,7 @@ module.exports = {
     uploadDocs : function(repo, git) {
         return new Promise(function(resolve, reject) {
             git.createGitHubPages().then(function() {
-                fs.copy(repo.directory.docs, repo.directory.repo, function(err){
+                fs.copy(repo.directory.docs, repo.directory.repo, {options: true}, function(err){
                     if (err) return winston.error(err);
                     winston.info("Copied docs to repo.");
                     git.add().then(function() {
