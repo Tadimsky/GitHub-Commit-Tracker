@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="383d66cd-b77c-4eba-99a3-0d02dc91dbcf" name="Default" comment="Disabled some annoying rules" />
-    <list id="425ec9c5-9ca9-46c4-99f8-00c9e0a8fed5" name="New changelist" comment="Couple changes&#10;">
+    <list default="true" id="383d66cd-b77c-4eba-99a3-0d02dc91dbcf" name="Default" comment="Disabled some annoying rules">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/scripts/CodePro.xml" afterPath="$PROJECT_DIR$/scripts/CodePro.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/scripts/codepro.sh" afterPath="$PROJECT_DIR$/scripts/codepro.sh" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/routes/github.js" afterPath="$PROJECT_DIR$/src/routes/github.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="GitHub-Commit-Tracker.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
-    <file path="$PROJECT_DIR$/.idea/workspace.xml" ignored="false" />
-    <file path="$PROJECT_DIR$/src/routes/github.js" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,11 +37,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CodePro.xml" pinned="false" current-in-tab="false">
+      <file leaf-file-name="CodePro.xml" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/scripts/CodePro.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="11" max-vertical-offset="629">
-              <caret line="21" column="22" selection-start-line="21" selection-start-column="22" selection-end-line="21" selection-end-column="22" />
+            <state vertical-scroll-proportion="0.35270542" vertical-offset="11" max-vertical-offset="629">
+              <caret line="11" column="23" selection-start-line="11" selection-start-column="23" selection-end-line="11" selection-end-column="23" />
               <folding />
             </state>
           </provider>
@@ -122,10 +117,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="github.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="github.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/routes/github.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.9425051" vertical-offset="204" max-vertical-offset="2465">
+            <state vertical-scroll-proportion="-18.36" vertical-offset="204" max-vertical-offset="2465">
               <caret line="39" column="1" selection-start-line="39" selection-start-column="1" selection-end-line="39" selection-end-column="1" />
               <folding />
             </state>
@@ -153,10 +148,10 @@
         <option value="$PROJECT_DIR$/gh-pages/index.html" />
         <option value="$PROJECT_DIR$/src/utils/gh-pages.js" />
         <option value="$PROJECT_DIR$/scripts/codepro.sh" />
-        <option value="$PROJECT_DIR$/scripts/CodePro.xml" />
         <option value="$PROJECT_DIR$/codepro/CodePro.xml" />
         <option value="$PROJECT_DIR$/codepro/AuditPreferences.pref" />
         <option value="$PROJECT_DIR$/src/routes/github.js" />
+        <option value="$PROJECT_DIR$/scripts/CodePro.xml" />
       </list>
     </option>
   </component>
@@ -418,7 +413,7 @@
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="383d66cd-b77c-4eba-99a3-0d02dc91dbcf" name="Default" comment="" />
-      <changelist id="425ec9c5-9ca9-46c4-99f8-00c9e0a8fed5" name="New changelist" comment="" />
+      <changelist id="" name="New changelist" comment="" />
       <created>1414348655082</created>
       <option name="number" value="Default" />
       <updated>1414348655082</updated>
@@ -435,7 +430,13 @@
       <option name="project" value="LOCAL" />
       <updated>1423077759995</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Couple changes&#10;">
+      <created>1423077825538</created>
+      <option name="number" value="00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1423077825538</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -817,14 +818,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/CodePro.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="11" max-vertical-offset="629">
-          <caret line="21" column="22" selection-start-line="21" selection-start-column="22" selection-end-line="21" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/codepro/CodePro.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="561">
@@ -859,8 +852,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/routes/github.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.9425051" vertical-offset="204" max-vertical-offset="2465">
+        <state vertical-scroll-proportion="-18.36" vertical-offset="204" max-vertical-offset="2465">
           <caret line="39" column="1" selection-start-line="39" selection-start-column="1" selection-end-line="39" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/CodePro.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.35270542" vertical-offset="11" max-vertical-offset="629">
+          <caret line="11" column="23" selection-start-line="11" selection-start-column="23" selection-end-line="11" selection-end-column="23" />
           <folding />
         </state>
       </provider>

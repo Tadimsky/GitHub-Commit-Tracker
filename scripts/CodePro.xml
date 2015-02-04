@@ -13,7 +13,7 @@
 				<pathelement location="${jreDir}/lib/rt.jar"/>
 			</classpath>
             <report file="${repoDir}/docs/CodePro/AuditViolations.html" generateResourcePages="true" groupBy="severity" showRecommendations="true" format="html" />
-            <report file="${repoDir}/docs/CodePro/AuditViolations.xml" format="xml" />
+            <!-- <report file="${repoDir}/docs/CodePro/AuditViolations.xml" format="xml" /> -->
 		</codepro.audit>
 
 		<codepro.metrics >
@@ -24,7 +24,7 @@
 				<pathelement location="${jreDir}/lib/rt.jar"/>
 			</classpath>
             <report file="${repoDir}/docs/CodePro/CodeMetrics.html" format="html" includeSubScopes="true" includeTypeLevelMetrics="true" includeDetails="true" includeViolationSummary="true" />
-            <report file="${repoDir}/docs/CodePro/CodeMetrics.xml" format="xml" />
+            <!-- <report file="${repoDir}/docs/CodePro/CodeMetrics.xml" format="xml" /> -->
         </codepro.metrics>
 
     </target>
